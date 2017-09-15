@@ -1,0 +1,129 @@
+int getEditValue(unsigned char teleOrder, WM_HWIN hItemFocussed)
+{
+    int tempTeleValue = 0;
+    switch (teleOrder)
+    {
+    case RECEIVER_SWR:
+    case MaxSWR:
+        tempTeleValue = EDIT_GetValue(hItemFocussed);
+        break;
+    case RECEIVER_RSSI:
+    case MinRSSI:
+        tempTeleValue = EDIT_GetValue(hItemFocussed);
+        break;
+    case RX_BATTERY:
+        tempTeleValue = EDIT_GetValue(hItemFocussed)*10; //V*10*10
+        break;
+    case D8R_A1:
+    case D8R_A2:
+    case SP2UART_AD1:
+    case SP2UART_AD2:
+        tempTeleValue = EDIT_GetValue(hItemFocussed)*10;//V*10*10
+        break;
+    case BAROHEIGHT:
+    case MaxBaroHeight:
+        if (0 == tempModelFile->teleUserData.SensorParam[teleOrder].unit)          // Edit : 10m
+        {
+            tempTeleValue = (EDIT_GetValue(hItemFocussed) * 10) * 100;
+        }
+        else if (1 == tempModelFile->teleUserData.SensorParam[teleOrder].unit)          // Edit: 100ft
+        {
+            tempTeleValue = (EDIT_GetValue(hItemFocussed) * 100) * 100 / 3.2808;
+        }
+        break;
+    case VARIO_SPEED:
+    case MaxVario:
+    case MinVario:
+        if (0 == tempModelFile->teleUserData.SensorParam[teleOrder].unit)          // Edit : 0.1m/s
+        {
+            tempTeleValue = (EDIT_GetValue(hItemFocussed) * 100) / 10;
+        }
+        else if (1 == tempModelFile->teleUserData.SensorParam[teleOrder].unit)          //Edit: 0.1ft/s
+        {
+            tempTeleValue = (EDIT_GetValue(hItemFocussed) * 100) / 10 / 3.2808;
+        }
+        break;
+    case VFAS: //eDIT: 0.1v
+        tempTeleValue = EDIT_GetValue(hItemFocussed)*10; // 1/100 V
+        break;
+    case TEMPERATURE1:
+    case TEMPERATURE2:
+    case MaxTemp1:
+    case MaxTemp2:
+        if (0 == tempModelFile->teleUserData.SensorParam[teleOrder].unit)          // C
+        {
+            tempTeleValue = EDIT_GetValue(hItemFocussed);
+        }
+        else if (1 == tempModelFile->teleUserData.SensorParam[teleOrder].unit)          // F
+        {
+            tempTeleValue = (EDIT_GetValue(hItemFocussed) - 32) / 1.8;
+        }
+        break;
+    case RPM:
+    case MaxRPM:
+        tempTeleValue = EDIT_GetValue(hItemFocussed) * 100;
+        break;
+    case FUEL_LEVEL:
+        tempTeleValue = EDIT_GetValue(hItemFocussed);
+        break;
+    case GPS_ALTITUDE:
+    case MaxGpsAltitude:
+        if (0 == tempModelFile->teleUserData.SensorParam[teleOrder].unit)          // EDIT : 10m
+        {
+            tempTeleValue = EDIT_GetValue(hItemFocussed) * 10 * 100;
+        }
+        else if (1 == tempModelFile->teleUserData.SensorParam[teleOrder].unit)          // EDIT: 100ft
+        {
+            tempTeleValue = EDIT_GetValue(hItemFocussed) * 100 * 100 / 3.2808;
+        }
+        break;
+    case GPS_SPEED:
+    case MaxGpsSpeed:
+        if (0 == tempModelFile->teleUserData.SensorParam[teleOrder].unit)          // EDIT: 0.1km/h
+        {
+            tempTeleValue = (EDIT_GetValue(hItemFocussed) * 1000);
+        }
+        else if (1 == tempModelFile->teleUserData.SensorParam[teleOrder].unit)          // EDIT: 0.1mph
+        {
+            tempTeleValue = ((EDIT_GetValue(hItemFocussed) * 1000 * 1000 / 621));
+        }
+        break;
+    case CACULATE_POWER:
+    case MaxPower:
+        tempTeleValue = EDIT_GetValue(hItemFocussed) * 10;
+        break;
+    case CELLS_SUM:
+    case CELLS_MIN:
+        tempTeleValue= EDIT_GetValue(hItemFocussed)*5;
+        break;
+    case CURRENT_A:          //< EDIT: 0.1A
+        tempTeleValue = EDIT_GetValue(hItemFocussed);          //0.1A
+        break;
+    case CACULATE_CC:
+        tempTeleValue = EDIT_GetValue(hItemFocussed) * 100;
+        break;
+    case GPS_DISTANCE:          //m  & ft
+    case MaxDistance:
+        if (0 == tempModelFile->teleUserData.SensorParam[teleOrder].unit)          //EDIT: 10m
+        {
+            tempTeleValue = EDIT_GetValue(hItemFocussed) * 10;
+        }
+        else if (1 == tempModelFile->teleUserData.SensorParam[teleOrder].unit)          //edit: 100ft
+        {
+            tempTeleValue = EDIT_GetValue(hItemFocussed) * 100 / 3.2808;
+        }
+        break;
+    case RB1_VOLT:
+    case RB2_VOLT:          //0.1V
+        tempTeleValue = EDIT_GetValue(hItemFocussed) * 100;
+        break;
+    case RB1_AMP:
+    case RB2_AMP:          //0.1A
+        tempTeleValue = EDIT_GetValue(hItemFocussed) * 10;
+        break;
+    default:
+        tempTeleValue = EDIT_GetValue(hItemFocussed);
+        break;
+    }
+    return (tempTeleValue);
+}
